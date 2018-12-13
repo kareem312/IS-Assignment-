@@ -41,13 +41,28 @@ if (isset($_POST['reg_user'])) {
       array_push($errors, "email already exists");
     }
   }
+  // generate salt function
+  function generateSalt($max = 64) {
+  	$characterList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*?";
+  	$i = 0;
+  	$salt = "";
+  	while ($i < $max) {
+  	    $salt .= $characterList{mt_rand(0, (strlen($characterList) - 1))};
+  	    $i++;
+  	}
+  	return $salt;
+  }
+  $user_salt = generateSalt(); // Generates a salt from the function above
+  $combo = $user_salt . $password_1; // Appending user password to the salt
+  $hashed_pwd = hash('sha512',$combo); // Using SHA512 to hash the salt+password combo string
 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
-  	$password = md5($password_1);//encrypt the password before saving in the database
+  	// $password = md5($password_1);//encrypt the password before saving in the database
 
-  	$query = "INSERT INTO users (user_username, user_password, user_email)
-  			  VALUES('$username', '$password', '$email')";
+// Now insert it (with login or whatever) into your database, use mysqli or pdo!
+  	$query = "INSERT INTO users (user_username, salt, user_password, user_email)
+  			  VALUES('$username', '$user_salt', '$hashed_pwd', '$email')";
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $username;
   	$_SESSION['success'] = "You are now logged in";
@@ -68,9 +83,18 @@ if (isset($_POST['login'])) {
 
   if (count($errors) == 0) {
   	// $password = md5($password);
-  	$query = "SELECT * FROM users WHERE user_username='$username' AND user_password='$password'";
+
+  	$query = "SELECT salt,user_password FROM users WHERE user_username='$username'";
   	$results = mysqli_query($db, $query);
-  	if (mysqli_num_rows($results) == 1) {
+    $row = mysqli_fetch_assoc($results);
+    // fetching values from Database
+    $stored_salt = $row['salt'];
+    $stored_hash = $row['user_password'];
+    $check_pass = $stored_salt . $password;
+    $check_hash = hash('sha512',$check_pass);
+    // echo $check_hash, "bbbbbbbbbbb", $stored_hash;
+
+  	if ($check_hash == $stored_hash) {
   	  $_SESSION['username'] = $username;
   	  $_SESSION['success'] = "You are now logged in";
   	  header('Location: index.php');

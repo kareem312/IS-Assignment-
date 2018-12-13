@@ -28,6 +28,12 @@
   	  <label>Confirm password</label>
   	  <input type="password" name="password_2">
   	</div>
+    <select class="mdb-select md-form colorful-select dropdown-primary">
+      <option selected>Open this select menu</option>
+      <option value="Lecturer">Lecturer</option>
+      <option value="TA">TA</option>
+      <option value="Student">Student</option>
+    </select>
   	<div class="input-group">
   	  <button type="submit" class="btn" name="reg_user">Register</button>
   	</div>
