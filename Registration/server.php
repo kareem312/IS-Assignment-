@@ -41,7 +41,7 @@ if (isset($_POST['reg_user'])) {
       array_push($errors, "email already exists");
     }
   }
-  // generate salt function
+
   function generateSalt($max = 64) {
   	$characterList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*?";
   	$i = 0;
@@ -58,10 +58,9 @@ if (isset($_POST['reg_user'])) {
 
   // Finally, register user if there are no errors in the form
   if (count($errors) == 0) {
-  	// $password = md5($password_1);//encrypt the password before saving in the database
-
-// Now insert it (with login or whatever) into your database, use mysqli or pdo!
-  	$query = "INSERT INTO users (user_username, salt, user_password, user_email)
+  	// $password = md5($password_1); //encrypt the password before saving in the database
+    // $password = $password_1;
+    $query = "INSERT INTO users (user_username, salt, user_password, user_email)
   			  VALUES('$username', '$user_salt', '$hashed_pwd', '$email')";
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $username;
@@ -73,6 +72,9 @@ if (isset($_POST['reg_user'])) {
 if (isset($_POST['login'])) {
   $username = mysqli_real_escape_string($db, $_POST['username']);
   $password = mysqli_real_escape_string($db, $_POST['password']);
+  $std = "Student";
+  $lec = "Lecturer";
+  $ta = "TA";
 
   if (empty($username)) {
   	array_push($errors, "Username is required");
@@ -82,25 +84,37 @@ if (isset($_POST['login'])) {
   }
 
   if (count($errors) == 0) {
-  	// $password = md5($password);
-
-  	$query = "SELECT salt,user_password FROM users WHERE user_username='$username'";
+    // $password = md5($password);
+    $query = "SELECT salt,user_password,type FROM users WHERE user_username='$username'";
   	$results = mysqli_query($db, $query);
     $row = mysqli_fetch_assoc($results);
     // fetching values from Database
     $stored_salt = $row['salt'];
     $stored_hash = $row['user_password'];
+    $type = $row['type'];
     $check_pass = $stored_salt . $password;
     $check_hash = hash('sha512',$check_pass);
-    // echo $check_hash, "bbbbbbbbbbb", $stored_hash;
+    echo $type;
 
-  	if ($check_hash == $stored_hash) {
+  	if ($check_hash == $stored_hash AND $type == $std) {
   	  $_SESSION['username'] = $username;
   	  $_SESSION['success'] = "You are now logged in";
-  	  header('Location: index.php');
-  	}else {
-  		array_push($errors, "Wrong username/password combination");
-  	}
+      header('Location: student.php');
+
+      }
+    elseif ($check_hash == $stored_hash AND $type == $lec) {
+      $_SESSION['username'] = $username;
+      $_SESSION['success'] = "You are now logged in";
+      header('Location: Lecturer.php');
+    }
+    elseif ($check_hash == $stored_hash AND $type == $ta) {
+        $_SESSION['username'] = $username;
+        $_SESSION['success'] = "You are now logged in";
+        header('Location: TA.php');
+      }
+    else {
+      array_push($errors, "Wrong username/password combination");
+    }
   }
 }
 
