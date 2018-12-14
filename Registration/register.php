@@ -28,7 +28,7 @@
   	  <label>Confirm password</label>
   	  <input type="password" name="password_2">
   	</div>
-    <select class="mdb-select md-form colorful-select dropdown-primary">
+    <select class="mdb-select md-form colorful-select dropdown-primary" name="select">
       <option selected>Open this select menu</option>
       <option value="Lecturer">Lecturer</option>
       <option value="TA">TA</option>

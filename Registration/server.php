@@ -16,12 +16,14 @@ if (isset($_POST['reg_user'])) {
   $email = mysqli_real_escape_string($db, $_POST['email']);
   $password_1 = mysqli_real_escape_string($db, $_POST['password_1']);
   $password_2 = mysqli_real_escape_string($db, $_POST['password_2']);
+  $select = mysqli_real_escape_string($db, $_POST['select']);
 
   // form validation: ensure that the form is correctly filled ...
   // by adding (array_push()) corresponding error unto $errors array
   if (empty($username)) { array_push($errors, "Username is required"); }
   if (empty($email)) { array_push($errors, "Email is required"); }
   if (empty($password_1)) { array_push($errors, "Password is required"); }
+  if (empty($select)) { array_push($errors, "Please select an option From Dropdown"); }
   if ($password_1 != $password_2) {
 	array_push($errors, "The two passwords do not match");
   }
@@ -60,8 +62,8 @@ if (isset($_POST['reg_user'])) {
   if (count($errors) == 0) {
   	// $password = md5($password_1); //encrypt the password before saving in the database
     // $password = $password_1;
-    $query = "INSERT INTO users (user_username, salt, user_password, user_email)
-  			  VALUES('$username', '$user_salt', '$hashed_pwd', '$email')";
+    $query = "INSERT INTO users (user_username, salt, user_password, user_email, AC)
+  			  VALUES('$username', '$user_salt', '$hashed_pwd', '$email', '$select')";
   	mysqli_query($db, $query);
   	$_SESSION['username'] = $username;
   	$_SESSION['success'] = "You are now logged in";
