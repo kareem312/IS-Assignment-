@@ -8,7 +8,7 @@
 
 $username =  $_SESSION['username'];
 
- $stdquery = "SELECT * FROM users WHERE user_username= '".$username."' AND type='Student' ";
+ $stdquery = "SELECT * FROM users WHERE user_username= '".$username."' AND AC='Student' ";
  $std_run = mysqli_query($db, $stdquery);
 
 ?>
