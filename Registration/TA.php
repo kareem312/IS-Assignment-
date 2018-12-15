@@ -10,7 +10,7 @@ error_reporting(E_ERROR | E_PARSE);
 
 $username =  $_SESSION['username'];
 
- $taquery = "SELECT * FROM users WHERE type='Student' ";
+ $taquery = "SELECT * FROM users WHERE AC='Student' ";
  $ta_run = mysqli_query($db, $taquery);
 
 ?>
