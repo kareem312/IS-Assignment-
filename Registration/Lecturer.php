@@ -9,7 +9,7 @@ if($_SESSION['AC'] != "Lecturer"){
 }
 $username =  $_SESSION['username'];
 
- $stdquery = "SELECT * FROM users WHERE type='Student' ";
+ $stdquery = "SELECT * FROM users WHERE AC='Student' ";
  $std_run = mysqli_query($db, $stdquery);
 
 ?>
