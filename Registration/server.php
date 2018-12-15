@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE);
 session_start();
 
 // initializing variables
@@ -65,9 +66,7 @@ if (isset($_POST['reg_user'])) {
     $query = "INSERT INTO users (user_username, salt, user_password, user_email, AC)
   			  VALUES('$username', '$user_salt', '$hashed_pwd', '$email', '$select')";
   	mysqli_query($db, $query);
-  	$_SESSION['username'] = $username;
-  	$_SESSION['success'] = "You are now logged in";
-  	header('location: index.php');
+  	header('location: login.php');
   }
 }
 // LOGIN USER
@@ -87,30 +86,33 @@ if (isset($_POST['login'])) {
 
   if (count($errors) == 0) {
     // $password = md5($password);
-    $query = "SELECT salt,user_password,type FROM users WHERE user_username='$username'";
+    $query = "SELECT salt,user_password,AC FROM users WHERE user_username='$username'";
   	$results = mysqli_query($db, $query);
     $row = mysqli_fetch_assoc($results);
     // fetching values from Database
     $stored_salt = $row['salt'];
     $stored_hash = $row['user_password'];
-    $type = $row['type'];
+    $type = $row['AC'];
     $check_pass = $stored_salt . $password;
     $check_hash = hash('sha512',$check_pass);
-    echo $type;
+
 
   	if ($check_hash == $stored_hash AND $type == $std) {
   	  $_SESSION['username'] = $username;
+      $_SESSION['AC'] = $type;
   	  $_SESSION['success'] = "You are now logged in";
       header('Location: student.php');
 
       }
     elseif ($check_hash == $stored_hash AND $type == $lec) {
       $_SESSION['username'] = $username;
+      $_SESSION['AC'] = $type;
       $_SESSION['success'] = "You are now logged in";
       header('Location: Lecturer.php');
     }
     elseif ($check_hash == $stored_hash AND $type == $ta) {
         $_SESSION['username'] = $username;
+        $_SESSION['AC'] = $type;
         $_SESSION['success'] = "You are now logged in";
         header('Location: TA.php');
       }

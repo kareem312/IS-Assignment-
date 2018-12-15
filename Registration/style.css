@@ -11,9 +11,9 @@ body {
   width: 30%;
   margin: 50px auto 0px;
   color: white;
-  background: #5F9EA0;
+  background: #2cd820;
   text-align: center;
-  border: 1px solid #B0C4DE;
+  border: 1px solid #2cd820;
   border-bottom: none;
   border-radius: 10px 10px 0px 0px;
   padding: 20px;
@@ -35,20 +35,26 @@ form, .content {
   margin: 3px;
 }
 .input-group input {
-  height: 30px;
-  width: 93%;
-  padding: 5px 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid gray;
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+.input-group input:focus{
+  background-color: #ddd;
+  outline: none;
 }
 .btn {
-  padding: 10px;
-  font-size: 15px;
+  background-color: #4CAF50;
   color: white;
-  background: #5F9EA0;
+  padding: 16px 20px;
+  margin: 8px 0;
   border: none;
-  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
 }
 .error {
   width: 92%;
